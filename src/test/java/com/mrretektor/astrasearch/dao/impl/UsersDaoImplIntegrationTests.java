@@ -5,22 +5,37 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.mrretektor.astrasearch.TestDataUtil;
-import com.mrretektor.astrasearch.config.TestContainersConfiguration;
 import com.mrretektor.astrasearch.domain.Users;
 
-
+@Testcontainers
 @SpringBootTest
-@ExtendWith(SpringExtension.class)
-@Import(TestContainersConfiguration.class)
+@ActiveProfiles("test")
 public class UsersDaoImplIntegrationTests {
+	
+    @Container
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
+        .withDatabaseName("testdb")
+        .withUsername("test")
+        .withPassword("test");
+    
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+        registry.add("spring.datasource.driver-class-name", () -> "org.postgresql.Driver");
+    }
 
 	
 	private UsersDaoImpl underTest;
