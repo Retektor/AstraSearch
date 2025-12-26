@@ -35,14 +35,18 @@ public class UsersDaoImplIntegrationTests {
 	@Test
 	@Transactional
 	public void testThatUserCanBeCreatedAndRecalled() {
-		Users user = TestDataUtil.createTestUser();
-		underTest.create(user);
-		Optional<Users> result = underTest.findOne(user.getUsername());
+		Users testUser = TestDataUtil.createTestUser();
+		underTest.create(testUser);
+		Optional<Users> result = underTest.findOne(testUser.getUsername());
 		
-
-		user.setId(1L);
-
 		assertThat(result).isPresent();
-		assertThat(result.get()).isEqualTo(user);
+		
+		Users fetchedUser = result.get();
+		
+		assertThat(fetchedUser.getId()).isNotNull();
+		assertThat(fetchedUser.getId()).isPositive();
+		
+		testUser.setId(fetchedUser.getId());
+		assertThat(fetchedUser).isEqualTo(testUser);
 	}
 }

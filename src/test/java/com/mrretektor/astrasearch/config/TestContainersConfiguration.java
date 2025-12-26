@@ -6,14 +6,20 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 @TestConfiguration
 public class TestContainersConfiguration {
+	
+	private static final PostgreSQLContainer<?> CONTAINER;
     
-    @Bean
-    public PostgreSQLContainer<?> postgreSQLContainer() {
-        PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15-alpine")
+	static { CONTAINER = new PostgreSQLContainer<>("postgres:15-alpine")
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test");
-        container.start();
-        return container;
+	
+        CONTAINER.start();
+        
+	}
+	
+    @Bean
+    public PostgreSQLContainer<?> postgreSQLContainer() {
+        return CONTAINER;
     }
 }
