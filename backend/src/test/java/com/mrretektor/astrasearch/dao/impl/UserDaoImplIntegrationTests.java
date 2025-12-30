@@ -16,12 +16,12 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.mrretektor.astrasearch.TestDataUtil;
-import com.mrretektor.astrasearch.domain.Users;
+import com.mrretektor.astrasearch.domain.User;
 
 @Testcontainers
 @SpringBootTest
 @ActiveProfiles("test")
-public class UsersDaoImplIntegrationTests {
+public class UserDaoImplIntegrationTests {
 	
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
@@ -38,11 +38,11 @@ public class UsersDaoImplIntegrationTests {
     }
 
 	
-	private UsersDaoImpl underTest;
+	private UserDaoImpl underTest;
 
 
 	@Autowired
-	public UsersDaoImplIntegrationTests(UsersDaoImpl underTest) {
+	public UserDaoImplIntegrationTests(UserDaoImpl underTest) {
 		this.underTest = underTest;
 	}
 	
@@ -50,13 +50,13 @@ public class UsersDaoImplIntegrationTests {
 	@Test
 	@Transactional
 	public void testThatUserCanBeCreatedAndRecalled() {
-		Users testUser = TestDataUtil.createTestUser();
+		User testUser = TestDataUtil.createTestUser();
 		underTest.create(testUser);
-		Optional<Users> result = underTest.findOne(testUser.getUsername());
+		Optional<User> result = underTest.findOne(testUser.getUsername());
 		
 		assertThat(result).isPresent();
 		
-		Users fetchedUser = result.get();
+		User fetchedUser = result.get();
 		
 		assertThat(fetchedUser.getId()).isNotNull();
 		assertThat(fetchedUser.getId()).isPositive();

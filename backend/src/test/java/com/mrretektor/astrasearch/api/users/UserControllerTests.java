@@ -15,20 +15,20 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.mrretektor.astrasearch.TestDataUtil;
-import com.mrretektor.astrasearch.dao.UsersDao;
-import com.mrretektor.astrasearch.domain.Users;
+import com.mrretektor.astrasearch.dao.UserDao;
+import com.mrretektor.astrasearch.domain.User;
 
-@WebMvcTest(UsersController.class)
+@WebMvcTest(UserController.class)
 @ContextConfiguration(classes = {
-	    UsersController.class,
+	    UserController.class,
 	})
-public class UsersControllerTests {
+public class UserControllerTests {
 
 	@Autowired
 	private MockMvc mockMvc;
 	
 	@MockitoBean
-	private UsersDao usersDao;
+	private UserDao usersDao;
 	
 	
 	private String path = "/api/users/";
@@ -36,7 +36,7 @@ public class UsersControllerTests {
 	
 	@Test
 	public void testThatUsersControllerReturnsUser() throws Exception {
-		Users user = TestDataUtil.createTestUser();
+		User user = TestDataUtil.createTestUser();
 		String username = user.getUsername();
 		
 		when(usersDao.findOne(username)).thenReturn(Optional.of(user));

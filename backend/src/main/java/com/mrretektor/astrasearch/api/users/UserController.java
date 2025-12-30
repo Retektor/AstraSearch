@@ -7,21 +7,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mrretektor.astrasearch.dao.UsersDao;
-import com.mrretektor.astrasearch.domain.Users;
+import com.mrretektor.astrasearch.dao.UserDao;
+import com.mrretektor.astrasearch.domain.User;
 
 @RestController
 @RequestMapping("/api")
-public class UsersController {
+public class UserController {
 	
-	private final UsersDao usersDao;
+	private final UserDao usersDao;
 	
-	public UsersController (final UsersDao usersDao) {
+	public UserController (final UserDao usersDao) {
 		this.usersDao = usersDao;
 	}
 	
 	@GetMapping("/users/{username}")
-	public Optional<Users> getUserByUsername(@PathVariable String username) {
+	public Optional<User> getUserByUsername(@PathVariable String username) {
 		return usersDao.findOne(username);
 	}
 }

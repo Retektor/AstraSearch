@@ -12,20 +12,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.mrretektor.astrasearch.TestDataUtil;
-import com.mrretektor.astrasearch.domain.Users;
+import com.mrretektor.astrasearch.domain.User;
 
 @ExtendWith(MockitoExtension.class)
-public class UsersDaoImplTests {
+public class UserDaoImplTests {
 	
 	@Mock
 	private JdbcTemplate jdbcTemplate;
 	
 	@InjectMocks
-	private UsersDaoImpl underTest;
+	private UserDaoImpl underTest;
 	
 	@Test
 	public void testThatCreateUserGeneratesCorrectSql() {
-		Users user = TestDataUtil.createTestUser();
+		User user = TestDataUtil.createTestUser();
 				
 		underTest.create(user);
 		
@@ -41,7 +41,7 @@ public class UsersDaoImplTests {
 		underTest.findOne("user");
 		verify(jdbcTemplate).query(
 				eq("SELECT id, username, password, first_name, last_name, email FROM users WHERE username = ? LIMIT 1"),
-				ArgumentMatchers.<UsersDaoImpl.UsersRowMapper>any(),
+				ArgumentMatchers.<UserDaoImpl.UserRowMapper>any(),
 				eq("user")
 		);
 	}

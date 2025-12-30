@@ -9,47 +9,50 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import com.mrretektor.astrasearch.dao.UsersDao;
-import com.mrretektor.astrasearch.domain.Users;
+import com.mrretektor.astrasearch.dao.UserDao;
+import com.mrretektor.astrasearch.domain.User;
 
 
 @Component
-public class UsersDaoImpl implements UsersDao{
+public class UserDaoImpl implements UserDao{
 
 	private final JdbcTemplate jdbcTemplate;
 	
-	public UsersDaoImpl(final JdbcTemplate jdbcTemplate) {
+	public UserDaoImpl(final JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	
 	@Override
-	public void create(Users user) {
+	public void create(User user) {
 		jdbcTemplate.update("INSERT INTO users (username, password, first_name, last_name, email)"
 				+ " VALUES (?, ?, ?, ?, ?)",
-				user.getUsername(), user.getPassword(), user.getFirstName(),
-				user.getLastName(), user.getEmail()
+				user.getUsername(),
+				user.getPassword(),
+				user.getFirstName(),
+				user.getLastName(),
+				user.getEmail()
 				);
 	}
 
 	
 	@Override
-	public Optional<Users> findOne(String username) {
-		List<Users> results = jdbcTemplate.query("SELECT"
+	public Optional<User> findOne(String username) {
+		List<User> results = jdbcTemplate.query("SELECT"
 				+ " id, username, password, first_name, last_name, email"
 				+ " FROM users WHERE username = ? LIMIT 1",
-				new UsersRowMapper(),
+				new UserRowMapper(),
 				username);
 		
 		return results.stream().findFirst();
 	}
 	
 	
-	public static class UsersRowMapper implements RowMapper<Users> {
+	public static class UserRowMapper implements RowMapper<User> {
 		
 		@Override
-		public Users mapRow(ResultSet rs, int rowNum) throws SQLException {
-			return Users.builder()
+		public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+			return User.builder()
 					.id(rs.getLong("id"))
 					.username(rs.getString("username"))
 					.password(rs.getString("password"))
