@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS celestial_bodies CASCADE;
+DROP TABLE IF EXISTS images CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TYPE IF EXISTS body_type CASCADE;
+
+
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(25) NOT NULL UNIQUE,
@@ -6,6 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
     last_name VARCHAR(25),
     email VARCHAR(25) UNIQUE
 );
+
 
 CREATE TYPE body_type AS ENUM (
     'STAR',
@@ -19,19 +26,21 @@ CREATE TYPE body_type AS ENUM (
     'UNKNOWN'
 );
 
+
 CREATE TABLE IF NOT EXISTS images(
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    url VARCHAR NOT NULL,
+    url VARCHAR NOT NULL UNIQUE,
     caption VARCHAR
 );
 
 CREATE TABLE IF NOT EXISTS celestial_bodies (
     id BIGSERIAL NOT NULL,
+    user_id INT REFERENCES users(id) NOT NULL,
     name VARCHAR NOT NULL,
     description VARCHAR,
     body_type public.body_type NOT NULL,
     discovery_time timestamp without time zone,
     image_id INT REFERENCES images(id),
-    right_ascension numeric(10,6),
-    declination numeric(10,6)
+    right_ascension numeric(10, 6),
+    declination numeric(10, 6)
 );

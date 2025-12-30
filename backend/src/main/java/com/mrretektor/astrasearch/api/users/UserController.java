@@ -14,14 +14,14 @@ import com.mrretektor.astrasearch.domain.User;
 @RequestMapping("/api")
 public class UserController {
 	
-	private final UserDao usersDao;
+	private final UserDao userDao;
 	
 	public UserController (final UserDao usersDao) {
-		this.usersDao = usersDao;
+		this.userDao = usersDao;
 	}
 	
 	@GetMapping("/users/{username}")
 	public Optional<User> getUserByUsername(@PathVariable String username) {
-		return usersDao.findOne(username);
+		return userDao.findOne(username);
 	}
 }

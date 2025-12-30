@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CelestialBody {
 	private Long id;
+	private Long userId;
 	private String name;
 	private String description;
 	private BodyType bodyType;

@@ -7,37 +7,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.mrretektor.astrasearch.BaseIntegrationTest;
 import com.mrretektor.astrasearch.TestDataUtil;
 import com.mrretektor.astrasearch.domain.CelestialBody;
 import com.mrretektor.astrasearch.domain.Image;
+import com.mrretektor.astrasearch.domain.User;
 
-@Testcontainers
+
 @SpringBootTest
 @ActiveProfiles("test")
-public class CelestialBodyDaoIntegrationTests {
-	
-	@Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
-        .withDatabaseName("testdb")
-        .withUsername("test")
-        .withPassword("test");
-    
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-        registry.add("spring.datasource.driver-class-name", () -> "org.postgresql.Driver");
-    }
-    
+public class CelestialBodyDaoIntegrationTests extends BaseIntegrationTest {
     
     private CelestialBodyDaoImpl underTest;
     private final JdbcTemplate jdbcTemplate;
@@ -51,19 +34,24 @@ public class CelestialBodyDaoIntegrationTests {
     
     @Test
     @Transactional
+    @DirtiesContext
     public void testThatCelestialBodyIsCreatedSuccessfully () {
     	Timestamp time = Timestamp.from(Instant.now());
+    	User user = TestDataUtil.createTestUser();
     	Image image = TestDataUtil.createTestImage();
     	
-    	jdbcTemplate.update(
-    	        "INSERT INTO images (url, caption) VALUES (?, ?)",
-    	        image.getUrl(),
-    	        image.getCaption()
+    	TestDataUtil.saveTestImage(image, jdbcTemplate);
+    	TestDataUtil.saveTestUser(user, jdbcTemplate);
+    	
+    	Long userId = jdbcTemplate.queryForObject(
+    	        "SELECT id FROM users WHERE username = ?", 
+    	        Long.class, 
+    	        user.getUsername()
     	    );
     	
-    	CelestialBody celestialBody = TestDataUtil.createTestCelestialBody(time);
+    	CelestialBody celestialBody = TestDataUtil.createTestCelestialBody(userId, time);
     	
-    	underTest.create(celestialBody);
+    	underTest.create(userId, celestialBody);
     }
 
 }

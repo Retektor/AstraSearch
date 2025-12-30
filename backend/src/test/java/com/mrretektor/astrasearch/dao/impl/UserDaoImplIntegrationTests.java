@@ -7,36 +7,18 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.mrretektor.astrasearch.BaseIntegrationTest;
 import com.mrretektor.astrasearch.TestDataUtil;
 import com.mrretektor.astrasearch.domain.User;
 
-@Testcontainers
+
 @SpringBootTest
 @ActiveProfiles("test")
-public class UserDaoImplIntegrationTests {
-	
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
-        .withDatabaseName("testdb")
-        .withUsername("test")
-        .withPassword("test");
-    
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-        registry.add("spring.datasource.driver-class-name", () -> "org.postgresql.Driver");
-    }
-
+public class UserDaoImplIntegrationTests extends BaseIntegrationTest {
 	
 	private UserDaoImpl underTest;
 
@@ -49,6 +31,7 @@ public class UserDaoImplIntegrationTests {
 	
 	@Test
 	@Transactional
+	@DirtiesContext
 	public void testThatUserCanBeCreatedAndRecalled() {
 		User testUser = TestDataUtil.createTestUser();
 		underTest.create(testUser);

@@ -18,42 +18,43 @@ public class CelestialBodyDaoImpl implements CelestialBodyDao{
 	}
 	
 	@Override
-	public void create(CelestialBody body) {
+	public void create(Long userId, CelestialBody body) {
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(
-			"INSERT INTO celestial_bodies (name, description, body_type, discovery_time,"
+			"INSERT INTO celestial_bodies (user_id, name, description, body_type, discovery_time,"
 				+ " image_id, right_ascension, declination)"
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?)");
-			ps.setString(1, body.getName());
-			ps.setString(2, body.getDescription());
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			ps.setLong(1, userId);
+			ps.setString(2, body.getName());
+			ps.setString(3, body.getDescription());
 			if (body.getBodyType() != null) {
-	            ps.setObject(3, body.getBodyType().name(), Types.OTHER);
+	            ps.setObject(4, body.getBodyType().name(), Types.OTHER);
 	        } else {
-	            ps.setNull(3, Types.OTHER);
+	            ps.setNull(4, Types.OTHER);
 	        }
 	        
 	        if (body.getDiscoveryTime() != null) {
-	            ps.setTimestamp(4, body.getDiscoveryTime());
+	            ps.setTimestamp(5, body.getDiscoveryTime());
 	        } else {
-	            ps.setNull(4, Types.TIMESTAMP);
+	            ps.setNull(5, Types.TIMESTAMP);
 	        }
 	        
 	        if (body.getImageId() != null) {
-	            ps.setLong(5, body.getImageId());
+	            ps.setLong(6, body.getImageId());
 	        } else {
-	            ps.setNull(5, Types.BIGINT);
+	            ps.setNull(6, Types.BIGINT);
 	        }
 	        
 	        if (body.getRightAscension() != null) {
-	            ps.setBigDecimal(6, body.getRightAscension());
+	            ps.setBigDecimal(7, body.getRightAscension());
 	        } else {
-	            ps.setNull(6, Types.NUMERIC);
+	            ps.setNull(7, Types.NUMERIC);
 	        }
 	        
 	        if (body.getDeclination() != null) {
-	            ps.setBigDecimal(7, body.getDeclination());
+	            ps.setBigDecimal(8, body.getDeclination());
 	        } else {
-	            ps.setNull(7, Types.NUMERIC);
+	            ps.setNull(8, Types.NUMERIC);
 	        }
 			
 			return ps;
