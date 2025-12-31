@@ -1,4 +1,4 @@
-package com.mrretektor.astrasearch;
+package com.mrretektor.astrasearch.config;
 
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;

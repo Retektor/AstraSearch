@@ -33,14 +33,15 @@ CREATE TABLE IF NOT EXISTS images(
     caption VARCHAR
 );
 
+
 CREATE TABLE IF NOT EXISTS celestial_bodies (
     id BIGSERIAL NOT NULL,
-    user_id INT REFERENCES users(id) NOT NULL,
+    user_id BIGINT REFERENCES users(id) NOT NULL,
     name VARCHAR NOT NULL,
     description VARCHAR,
     body_type public.body_type NOT NULL,
     discovery_time timestamp without time zone,
-    image_id INT REFERENCES images(id),
+    image_id BIGINT REFERENCES images(id),
     right_ascension numeric(10, 6),
     declination numeric(10, 6)
 );

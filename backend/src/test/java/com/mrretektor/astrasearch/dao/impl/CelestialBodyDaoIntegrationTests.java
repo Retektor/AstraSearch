@@ -11,11 +11,13 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mrretektor.astrasearch.BaseIntegrationTest;
-import com.mrretektor.astrasearch.TestDataUtil;
+import com.mrretektor.astrasearch.config.BaseIntegrationTest;
+import com.mrretektor.astrasearch.dao.ImageDao;
+import com.mrretektor.astrasearch.dao.UserDao;
 import com.mrretektor.astrasearch.domain.CelestialBody;
 import com.mrretektor.astrasearch.domain.Image;
 import com.mrretektor.astrasearch.domain.User;
+import com.mrretektor.astrasearch.util.TestDataUtil;
 
 
 @SpringBootTest
@@ -24,12 +26,20 @@ public class CelestialBodyDaoIntegrationTests extends BaseIntegrationTest {
     
     private CelestialBodyDaoImpl underTest;
     private final JdbcTemplate jdbcTemplate;
+    private final ImageDao imageDao;
+    private final UserDao userDao;
     
     
     @Autowired
-    public CelestialBodyDaoIntegrationTests(CelestialBodyDaoImpl underTest, JdbcTemplate jdbcTemplate) {
+    public CelestialBodyDaoIntegrationTests(CelestialBodyDaoImpl underTest,
+    		JdbcTemplate jdbcTemplate,
+    		ImageDao imageDao,
+    		UserDao userDao)
+    {
     	this.underTest = underTest;
     	this.jdbcTemplate = jdbcTemplate;
+    	this.imageDao = imageDao;
+    	this.userDao = userDao;
     }
     
     @Test
@@ -40,8 +50,8 @@ public class CelestialBodyDaoIntegrationTests extends BaseIntegrationTest {
     	User user = TestDataUtil.createTestUser();
     	Image image = TestDataUtil.createTestImage();
     	
-    	TestDataUtil.saveTestImage(image, jdbcTemplate);
-    	TestDataUtil.saveTestUser(user, jdbcTemplate);
+    	userDao.create(user);
+    	imageDao.create(image);
     	
     	Long userId = jdbcTemplate.queryForObject(
     	        "SELECT id FROM users WHERE username = ?", 

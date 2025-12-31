@@ -11,8 +11,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.mrretektor.astrasearch.TestDataUtil;
 import com.mrretektor.astrasearch.domain.User;
+import com.mrretektor.astrasearch.util.TestDataUtil;
 
 @ExtendWith(MockitoExtension.class)
 public class UserDaoImplTests {

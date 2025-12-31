@@ -1,4 +1,4 @@
-package com.mrretektor.astrasearch.api.users;
+package com.mrretektor.astrasearch.controller;
 
 import java.util.Optional;
 

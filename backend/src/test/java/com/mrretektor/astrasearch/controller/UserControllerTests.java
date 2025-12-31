@@ -1,4 +1,4 @@
-package com.mrretektor.astrasearch.api.users;
+package com.mrretektor.astrasearch.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -14,9 +14,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.mrretektor.astrasearch.TestDataUtil;
+import com.mrretektor.astrasearch.controller.UserController;
 import com.mrretektor.astrasearch.dao.UserDao;
 import com.mrretektor.astrasearch.domain.User;
+import com.mrretektor.astrasearch.util.TestDataUtil;
 
 @WebMvcTest(UserController.class)
 @ContextConfiguration(classes = {

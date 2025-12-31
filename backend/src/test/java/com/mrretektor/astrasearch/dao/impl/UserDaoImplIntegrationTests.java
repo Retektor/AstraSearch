@@ -11,9 +11,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mrretektor.astrasearch.BaseIntegrationTest;
-import com.mrretektor.astrasearch.TestDataUtil;
+import com.mrretektor.astrasearch.config.BaseIntegrationTest;
 import com.mrretektor.astrasearch.domain.User;
+import com.mrretektor.astrasearch.util.TestDataUtil;
 
 
 @SpringBootTest

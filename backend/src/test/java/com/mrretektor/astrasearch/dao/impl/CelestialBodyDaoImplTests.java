@@ -14,9 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 
-import com.mrretektor.astrasearch.TestDataUtil;
 import com.mrretektor.astrasearch.domain.CelestialBody;
 import com.mrretektor.astrasearch.domain.User;
+import com.mrretektor.astrasearch.util.TestDataUtil;
 
 @ExtendWith(MockitoExtension.class)
 public class CelestialBodyDaoImplTests {
