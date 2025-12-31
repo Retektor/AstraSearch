@@ -1,12 +1,19 @@
 package com.mrretektor.astrasearch.dao.impl;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import com.mrretektor.astrasearch.dao.CelestialBodyDao;
+import com.mrretektor.astrasearch.domain.BodyType;
 import com.mrretektor.astrasearch.domain.CelestialBody;
 
 @Component
@@ -18,12 +25,16 @@ public class CelestialBodyDaoImpl implements CelestialBodyDao{
 	}
 	
 	@Override
-	public void create(Long userId, CelestialBody body) {
+	public CelestialBody create(Long userId, CelestialBody body) {
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(
 			"INSERT INTO celestial_bodies (user_id, name, description, body_type, discovery_time,"
 				+ " image_id, right_ascension, declination)"
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)", new String[]{"id"}
+			);
+			
 			ps.setLong(1, userId);
 			ps.setString(2, body.getName());
 			ps.setString(3, body.getDescription());
@@ -34,7 +45,7 @@ public class CelestialBodyDaoImpl implements CelestialBodyDao{
 	        }
 	        
 	        if (body.getDiscoveryTime() != null) {
-	            ps.setTimestamp(5, body.getDiscoveryTime());
+	            ps.setTimestamp(5, Timestamp.valueOf(body.getDiscoveryTime()));
 	        } else {
 	            ps.setNull(5, Types.TIMESTAMP);
 	        }
@@ -58,6 +69,39 @@ public class CelestialBodyDaoImpl implements CelestialBodyDao{
 	        }
 			
 			return ps;
-		});
+		}, keyHolder);
+		
+		Long id = keyHolder.getKey().longValue();
+		
+		CelestialBody createdBody = jdbcTemplate.query("SELECT * FROM celestial_bodies WHERE id = ?", new CelestialBodyRowMapper(), id).getFirst();
+		
+		return createdBody;
+	}
+	
+	
+	public static class CelestialBodyRowMapper implements RowMapper<CelestialBody> {
+		
+		@Override
+		public CelestialBody mapRow(ResultSet rs, int rowNum) throws SQLException {
+			String bodyTypeStr = rs.getString("body_type");
+			
+			BodyType bodyType = null;
+			
+			if (bodyTypeStr != null) {
+				bodyType = BodyType.valueOf(bodyTypeStr);
+			}
+			
+			return CelestialBody.builder()
+					.id(rs.getLong("id"))
+					.userId(rs.getLong("user_id"))
+					.name(rs.getString("name"))
+					.description(rs.getString("description"))
+					.bodyType(bodyType)
+					.discoveryTime(rs.getTimestamp("discovery_time").toLocalDateTime())
+					.imageId(rs.getLong("image_id"))
+					.rightAscension(rs.getBigDecimal("right_ascension"))
+					.declination(rs.getBigDecimal("declination"))
+					.build();
+		}
 	}
 }

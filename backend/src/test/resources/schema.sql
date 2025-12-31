@@ -45,3 +45,16 @@ CREATE TABLE IF NOT EXISTS celestial_bodies (
     right_ascension numeric(10, 6),
     declination numeric(10, 6)
 );
+
+
+CREATE TABLE IF NOT EXISTS stars (
+    id BIGSERIAL NOT NULL,
+    constellation VARCHAR(50),
+    apparent_magnitude numeric(6,3),
+    absolute_magnitude numeric(6,3),
+    mass_solar numeric(10,5),
+    radius_solar numeric(10,5),
+    luminosity_solar numeric(10,5),
+    temperature REAL,
+    spectral_class VARCHAR(10)
+);

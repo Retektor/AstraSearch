@@ -1,7 +1,7 @@
 package com.mrretektor.astrasearch.domain;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,7 @@ public class CelestialBody {
 	private String name;
 	private String description;
 	private BodyType bodyType;
-	private Timestamp discoveryTime;
+	private LocalDateTime discoveryTime;
 	private Long imageId;
 	private BigDecimal rightAscension;
 	private BigDecimal declination;
