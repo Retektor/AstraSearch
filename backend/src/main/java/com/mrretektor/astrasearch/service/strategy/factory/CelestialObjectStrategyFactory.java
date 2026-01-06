@@ -20,8 +20,6 @@ public class CelestialObjectStrategyFactory {
                 CelestialObjectStrategy::getBodyType,
                 strategy -> strategy
             ));
-        
-        System.out.println("Factory created. Strategies: " + strategies.keySet());
     }
     
     public CelestialObjectStrategy getStrategy(BodyType bodyType) {
