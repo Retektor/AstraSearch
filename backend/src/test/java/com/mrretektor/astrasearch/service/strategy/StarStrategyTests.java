@@ -3,6 +3,7 @@ package com.mrretektor.astrasearch.service.strategy;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,7 +41,7 @@ public class StarStrategyTests {
 				"temperature", 20000
 				);
 		
-		when(starDao.create(any(Star.class))).thenAnswer(inv -> {
+		when(starDao.create(any(Star.class), eq(1L))).thenAnswer(inv -> {
 	        Star star = inv.getArgument(0);
 	        star.setId(1L);
 	        return star;
@@ -75,7 +76,7 @@ public class StarStrategyTests {
 				"temperature", 20000
 				);
 		
-		when(starDao.create(any(Star.class))).thenAnswer(inv -> {
+		when(starDao.create(any(Star.class), eq(1L))).thenAnswer(inv -> {
 	        Star star = inv.getArgument(0);
 	        star.setId(1L);
 	        return star;
@@ -85,7 +86,7 @@ public class StarStrategyTests {
 		Map<String, Object> starResponse = underTest.createObject(1L, testData);
 		
 		
-		verify(starDao).create(any(Star.class));
+		verify(starDao).create(any(Star.class), eq(1L));
 	}
 	
 }

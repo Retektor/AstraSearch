@@ -27,6 +27,6 @@ public class StarDaoImplIntegrationTests extends BaseIntegrationTest {
 	@DirtiesContext
 	public void testThatStarIsCreatedSuccessfully() {
 		Star testStar = TestDataUtil.createTestStar();
-		underTest.create(testStar);
+		underTest.create(testStar, 1L);
 	}
 }

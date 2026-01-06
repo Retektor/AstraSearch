@@ -31,7 +31,6 @@ public class StarStrategy implements CelestialObjectStrategy {
 	    ) {
 		
 		Star star = Star.builder()
-				.bodyId(celestialBodyId)
 				.constellation((String) requestData.get("constellation"))
 				.apparentMagnitude(convertToBigDecimal(requestData.get("apparent_magnitude")))
 				.absoluteMagnitude(convertToBigDecimal(requestData.get("absolute_magnitude")))
@@ -42,7 +41,7 @@ public class StarStrategy implements CelestialObjectStrategy {
 				.spectralClass((String) requestData.get("spectral_class"))
 				.build();
 		
-		Long starId = starDao.create(star).getId();
+		Long starId = starDao.create(star, celestialBodyId).getId();
 		
 		Map<String, Object> result = new HashMap<>(requestData);
         result.put("star_id", starId);

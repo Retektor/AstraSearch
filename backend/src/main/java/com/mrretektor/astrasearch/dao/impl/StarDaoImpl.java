@@ -22,7 +22,7 @@ public class StarDaoImpl implements StarDao {
 	}
 	
 	@Override
-	public Star create(Star star) {
+	public Star create(Star star, Long celestialBodyId) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		
 		jdbcTemplate.update(connection -> {
@@ -33,7 +33,7 @@ public class StarDaoImpl implements StarDao {
 	            new String[]{"id"}
 	        );
 	        
-	        ps.setLong(1, star.getBodyId());
+	        ps.setLong(1, celestialBodyId);
 	        ps.setString(2, star.getConstellation());
 	        ps.setBigDecimal(3, star.getApparentMagnitude());
 	        ps.setBigDecimal(4, star.getAbsoluteMagnitude());
