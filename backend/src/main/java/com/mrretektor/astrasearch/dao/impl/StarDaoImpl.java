@@ -27,20 +27,21 @@ public class StarDaoImpl implements StarDao {
 		
 		jdbcTemplate.update(connection -> {
 	        PreparedStatement ps = connection.prepareStatement(
-	            "INSERT INTO stars (constellation, apparent_magnitude, absolute_magnitude,"
+	            "INSERT INTO stars (body_id, constellation, apparent_magnitude, absolute_magnitude,"
 	            + " mass_solar, radius_solar, luminosity_solar, temperature, spectral_class)"
-	            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+	            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
 	            new String[]{"id"}
 	        );
 	        
-	        ps.setString(1, star.getConstellation());
-	        ps.setBigDecimal(2, star.getApparentMagnitude());
-	        ps.setBigDecimal(3, star.getAbsoluteMagnitude());
-	        ps.setBigDecimal(4, star.getMassSolar());
-	        ps.setBigDecimal(5, star.getRadiusSolar());
-	        ps.setBigDecimal(6, star.getLuminositySolar());
-	        ps.setFloat(7, star.getTemperature());
-	        ps.setString(8, star.getSpectralClass());
+	        ps.setLong(1, star.getBodyId());
+	        ps.setString(2, star.getConstellation());
+	        ps.setBigDecimal(3, star.getApparentMagnitude());
+	        ps.setBigDecimal(4, star.getAbsoluteMagnitude());
+	        ps.setBigDecimal(5, star.getMassSolar());
+	        ps.setBigDecimal(6, star.getRadiusSolar());
+	        ps.setBigDecimal(7, star.getLuminositySolar());
+	        ps.setFloat(8, star.getTemperature());
+	        ps.setString(9, star.getSpectralClass());
 	        
 	        return ps;
 	    }, keyHolder);

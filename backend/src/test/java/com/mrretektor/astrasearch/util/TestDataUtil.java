@@ -48,6 +48,7 @@ public final class TestDataUtil {
 	
 	public static Star createTestStar() {
 		return Star.builder()
+				.bodyId(1L)
 				.constellation("testConstellation")
 				.apparentMagnitude(BigDecimal.valueOf(-1))
 				.absoluteMagnitude(BigDecimal.valueOf(1))

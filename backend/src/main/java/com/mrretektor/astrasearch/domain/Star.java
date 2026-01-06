@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Star {
 	private Long id;
+	private Long bodyId;
 	private String constellation;
 	private BigDecimal apparentMagnitude;
 	private BigDecimal absoluteMagnitude;

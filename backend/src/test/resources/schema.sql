@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS images(
 
 
 CREATE TABLE IF NOT EXISTS celestial_bodies (
-    id BIGSERIAL NOT NULL,
+    id BIGSERIAL PRIMARY KEY NOT NULL,
     user_id BIGINT REFERENCES users(id) NOT NULL,
     name VARCHAR NOT NULL,
     description VARCHAR,
@@ -48,13 +48,14 @@ CREATE TABLE IF NOT EXISTS celestial_bodies (
 
 
 CREATE TABLE IF NOT EXISTS stars (
-    id BIGSERIAL NOT NULL,
-    constellation VARCHAR(50),
+    id BIGSERIAL PRIMARY KEY NOT NULL,
+    body_id BIGINT REFERENCES celestial_bodies(id) NOT NULL,
+    constellation character varying(50),
     apparent_magnitude numeric(6,3),
     absolute_magnitude numeric(6,3),
     mass_solar numeric(10,5),
     radius_solar numeric(10,5),
     luminosity_solar numeric(10,5),
-    temperature REAL,
-    spectral_class VARCHAR(10)
+    temperature real,
+    spectral_class character varying(10)
 );
