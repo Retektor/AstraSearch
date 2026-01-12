@@ -52,14 +52,14 @@ public class StarStrategyTests {
 		
 		
 		assertThat(starResponse).contains(
+				entry("star_id", 1L),
 				entry("constellation", "testConstellation"),
 				entry("apparent_magnitude", BigDecimal.valueOf(1L)),
 				entry("absolute_magnitude", BigDecimal.valueOf(-1L)),
 				entry("mass_solar", BigDecimal.valueOf(1L)),
 				entry("radius_solar", BigDecimal.valueOf(1L)),
 				entry("luminosity_solar", BigDecimal.valueOf(1L)),
-				entry("temperature", 20000),
-				entry("star_id", 1L)
+				entry("temperature", 20000)
 				);
 	}
 	

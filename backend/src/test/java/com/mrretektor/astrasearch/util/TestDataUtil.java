@@ -8,6 +8,7 @@ import java.time.ZoneOffset;
 import com.mrretektor.astrasearch.domain.BodyType;
 import com.mrretektor.astrasearch.domain.CelestialBody;
 import com.mrretektor.astrasearch.domain.Image;
+import com.mrretektor.astrasearch.domain.Planet;
 import com.mrretektor.astrasearch.domain.Star;
 import com.mrretektor.astrasearch.domain.User;
 import com.mrretektor.astrasearch.dto.request.CreateCelestialObjectRequest;
@@ -81,6 +82,17 @@ public final class TestDataUtil {
 				.rightAscension(celestialBody.getRightAscension())
 				.declination(celestialBody.getDeclination())
 				.typeSpecificData(null)
+				.build();
+	}
+
+	public static Planet createTestPlanet() {
+		return Planet.builder()
+				.orbitalPeriodDays((float) 365.25)
+				.earthMeanRadius(1)
+				.earthVolume(1)
+				.meanDensity((float) 5.51)
+				.surfaceGravity((float) 9.807)
+				.surfaceTemperatureKelvin((float) 273.15)
 				.build();
 	}
 }
