@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -24,15 +25,24 @@ public class UserDaoImpl implements UserDao{
 
 	
 	@Override
-	public void create(User user) {
-		jdbcTemplate.update("INSERT INTO users (username, password, first_name, last_name, email)"
-				+ " VALUES (?, ?, ?, ?, ?)",
-				user.getUsername(),
-				user.getPassword(),
-				user.getFirstName(),
-				user.getLastName(),
-				user.getEmail()
-				);
+	public User create(User user) {
+		String username = user.getUsername();
+		
+		String sql = "INSERT INTO users (username, password, first_name, last_name, email)"
+				+ " VALUES (?, ?, ?, ?, ?)"
+				+ " RETURNING id, username, password, first_name, last_name, email";
+		
+		try {
+		return jdbcTemplate.queryForObject(sql, new UserRowMapper(),
+		        user.getUsername(),
+		        user.getPassword(),
+		        user.getFirstName(),
+		        user.getLastName(),
+		        user.getEmail()
+		    );
+		} catch (DataAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	

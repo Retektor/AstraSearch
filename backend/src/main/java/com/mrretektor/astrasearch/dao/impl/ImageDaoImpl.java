@@ -3,6 +3,7 @@ package com.mrretektor.astrasearch.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -23,15 +24,16 @@ public class ImageDaoImpl implements ImageDao {
 	public Image create(Image image) {
 		String url = image.getUrl();
 		
-		jdbcTemplate.update("INSERT INTO images (url, caption) VALUES (?, ?)",
-				url,
-				image.getCaption()
-				);
+		String sql = "INSERT INTO images (url, caption) VALUES (?, ?) RETURNING id, url, caption";
 		
-		return jdbcTemplate.query("SELECT * FROM images WHERE url = ?",
-				new ImageRowMapper(),
-				url)
-				.getFirst();
+		try {
+			return jdbcTemplate.queryForObject(sql,
+					new ImageRowMapper(),
+					image.getCaption(),
+					image.getUrl());
+		} catch (DataAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public static class ImageRowMapper implements RowMapper<Image> {

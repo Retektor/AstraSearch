@@ -1,6 +1,10 @@
 package com.mrretektor.astrasearch.dao.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +44,22 @@ public class CelestialBodyDaoImplIntegrationTests extends BaseIntegrationTest {
     	this.userDao = userDao;
     }
     
+    private void assertCelestialBodyEquals(CelestialBody expected, CelestialBody actual) {
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getUserId(), actual.getUserId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getDescription(), actual.getDescription());
+        assertEquals(expected.getBodyType(), actual.getBodyType());
+        
+        long expectedMillis = expected.getDiscoveryTime().toInstant(ZoneOffset.UTC).toEpochMilli();
+        long actualMillis = actual.getDiscoveryTime().toInstant(ZoneOffset.UTC).toEpochMilli();
+        assertEquals(expectedMillis, actualMillis, "Discovery time mismatch");
+        assertEquals(expected.getImageId(), actual.getImageId());
+        assertEquals(expected.getRightAscension(), actual.getRightAscension());
+        assertEquals(expected.getDeclination(), actual.getDeclination());
+    }
+
+    
     @Test
     @Transactional
     @DirtiesContext
@@ -61,6 +81,46 @@ public class CelestialBodyDaoImplIntegrationTests extends BaseIntegrationTest {
     	CelestialBody celestialBody = TestDataUtil.createTestCelestialBody(userId, time, imageId);
     	
     	underTest.create(userId, celestialBody);
+    }
+    
+    @Test
+    @Transactional
+    @DirtiesContext
+    public void testThatFindByNameReturnsBodyIfFound() {
+    	LocalDateTime time = TestDataUtil.createLocalDateTime();
+    	User user = userDao.create(TestDataUtil.createTestUser());
+    	
+    	Long userId = user.getId();
+    	Long imageId = imageDao.create(TestDataUtil.createTestImage()).getId();
+    	CelestialBody expectedBody = TestDataUtil.createTestCelestialBody(userId, time, imageId);
+    	
+    	underTest.create(userId, expectedBody);
+    	
+    	
+    	Optional<CelestialBody> result = underTest.findByName("testName");
+    	
+    	
+    	assertCelestialBodyEquals(expectedBody, result.get());
+    }
+    
+    @Test
+    @Transactional
+    @DirtiesContext
+    public void testThatFindByNameReturnsNullIfNotFound() {
+    	LocalDateTime time = TestDataUtil.createLocalDateTime();
+    	User user = userDao.create(TestDataUtil.createTestUser());
+    	
+    	Long userId = user.getId();
+    	Long imageId = imageDao.create(TestDataUtil.createTestImage()).getId();
+    	CelestialBody expectedBody = TestDataUtil.createTestCelestialBody(userId, time, imageId);
+    	
+    	underTest.create(userId, expectedBody);
+    	
+    	
+    	Optional<CelestialBody> result = underTest.findByName("nonExistentName");
+    	
+    	
+    	assertEquals(result, Optional.empty());
     }
 
 }

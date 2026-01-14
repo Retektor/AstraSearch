@@ -1,13 +1,11 @@
 package com.mrretektor.astrasearch.dao.impl;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import com.mrretektor.astrasearch.dao.StarDao;
@@ -23,36 +21,28 @@ public class StarDaoImpl implements StarDao {
 	
 	@Override
 	public Star create(Star star, Long celestialBodyId) {
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		
-		jdbcTemplate.update(connection -> {
-	        PreparedStatement ps = connection.prepareStatement(
-	            "INSERT INTO stars (body_id, constellation, apparent_magnitude, absolute_magnitude,"
+		String sql = "INSERT INTO stars (body_id, constellation, apparent_magnitude, absolute_magnitude,"
 	            + " mass_solar, radius_solar, luminosity_solar, temperature, spectral_class)"
-	            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-	            new String[]{"id"}
-	        );
-	        
-	        ps.setLong(1, celestialBodyId);
-	        ps.setString(2, star.getConstellation());
-	        ps.setBigDecimal(3, star.getApparentMagnitude());
-	        ps.setBigDecimal(4, star.getAbsoluteMagnitude());
-	        ps.setBigDecimal(5, star.getMassSolar());
-	        ps.setBigDecimal(6, star.getRadiusSolar());
-	        ps.setBigDecimal(7, star.getLuminositySolar());
-	        ps.setFloat(8, star.getTemperature());
-	        ps.setString(9, star.getSpectralClass());
-	        
-	        return ps;
-	    }, keyHolder);
-	    
-	    Long starId = keyHolder.getKey().longValue();
+	            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	            + " RETURNING id, body_id, constellation, apparent_magnitude, absolute_magnitude,"
+	            + " mass_solar, radius_solar, luminosity_solar, temperature, spectral_class";
 		
-		Star createdStar = jdbcTemplate.query("SELECT * FROM stars WHERE id = ?",
-				new StarRowMapper(),
-				starId).getFirst();
-		
-		return createdStar;
+		try {
+			return jdbcTemplate.queryForObject(sql,
+					new StarRowMapper(),
+					celestialBodyId,
+					star.getConstellation(),
+					star.getApparentMagnitude(),
+					star.getAbsoluteMagnitude(),
+					star.getMassSolar(),
+					star.getRadiusSolar(),
+					star.getLuminositySolar(),
+					star.getTemperature(),
+					star.getSpectralClass()
+					);
+		} catch (DataAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	

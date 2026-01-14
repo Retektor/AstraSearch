@@ -5,7 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.Optional;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,7 +19,7 @@ import com.mrretektor.astrasearch.domain.BodyType;
 import com.mrretektor.astrasearch.domain.CelestialBody;
 
 @Component
-public class CelestialBodyDaoImpl implements CelestialBodyDao{
+public class CelestialBodyDaoImpl implements CelestialBodyDao {
 	private final JdbcTemplate jdbcTemplate;
 	
 	public CelestialBodyDaoImpl(final JdbcTemplate jdbcTemplate) {
@@ -76,6 +78,18 @@ public class CelestialBodyDaoImpl implements CelestialBodyDao{
 		CelestialBody createdBody = jdbcTemplate.query("SELECT * FROM celestial_bodies WHERE id = ?", new CelestialBodyRowMapper(), id).getFirst();
 		
 		return createdBody;
+	}
+	
+	
+	@Override
+	public Optional<CelestialBody> findByName(String name) {
+		try {
+			return Optional.ofNullable(
+					jdbcTemplate.queryForObject("SELECT * FROM celestial_bodies WHERE name = ?", new CelestialBodyRowMapper(), name)
+					);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
 	}
 	
 	
