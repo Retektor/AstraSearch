@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -90,6 +91,12 @@ public class CelestialBodyDaoImpl implements CelestialBodyDao {
 		} catch (EmptyResultDataAccessException e) {
 			return Optional.empty();
 		}
+	}
+	
+	
+	@Override
+	public List<CelestialBody> getAll() {
+		return jdbcTemplate.query("SELECT * FROM celestial_bodies", new CelestialBodyRowMapper());
 	}
 	
 	

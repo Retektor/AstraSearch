@@ -1,9 +1,11 @@
 package com.mrretektor.astrasearch.dao.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -30,7 +32,6 @@ public class CelestialBodyDaoImplIntegrationTests extends BaseIntegrationTest {
     private final JdbcTemplate jdbcTemplate;
     private final ImageDao imageDao;
     private final UserDao userDao;
-    
     
     @Autowired
     public CelestialBodyDaoImplIntegrationTests(CelestialBodyDaoImpl underTest,
@@ -59,7 +60,6 @@ public class CelestialBodyDaoImplIntegrationTests extends BaseIntegrationTest {
         assertEquals(expected.getDeclination(), actual.getDeclination());
     }
 
-    
     @Test
     @Transactional
     @DirtiesContext
@@ -122,5 +122,47 @@ public class CelestialBodyDaoImplIntegrationTests extends BaseIntegrationTest {
     	
     	assertEquals(result, Optional.empty());
     }
+    
+    @Test
+    @Transactional
+    @DirtiesContext
+    public void testThatGetAllReturnsList() {
+    	LocalDateTime time = TestDataUtil.createLocalDateTime();
+    	User user = userDao.create(TestDataUtil.createTestUser());
+    	
+    	Long userId = user.getId();
+    	Long imageId = imageDao.create(TestDataUtil.createTestImage()).getId();
+    	CelestialBody firstBody = TestDataUtil.createTestCelestialBody(userId, time, imageId);
+    	
+    	CelestialBody secondBody = TestDataUtil.createTestCelestialBody(userId, time, imageId);
+    	secondBody.setName("anotherBody");
+    	secondBody.setDescription("anotherBodyDescription");
+    	
+    	CelestialBody thirdBody = TestDataUtil.createTestCelestialBody(userId, time, imageId);
+    	secondBody.setName("thirdBody");
+    	secondBody.setDescription("thirdBodyDescription");
+    	
+    	underTest.create(userId, firstBody);
+    	underTest.create(userId, secondBody);
+    	underTest.create(userId, thirdBody);
+    	
+    	
+    	List<CelestialBody> result = underTest.getAll();
+    	
+    	
+    	assertEquals(result.size(), 3);
+    	for (CelestialBody item : result) {
+    		assertTrue(item instanceof CelestialBody);
+    	}
+    }
 
+    @Test
+    @Transactional
+    @DirtiesContext
+    public void testThatGetAllReturnsNone() {
+    	List<CelestialBody> result = underTest.getAll();
+    	
+    	
+    	assertEquals(result.size(), 0);
+    }
 }
