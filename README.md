@@ -79,3 +79,24 @@ Spring Framework использует следующие параметры дл
 
 ### Создание небесного тела
 При создании небесного тела используются почти все (кроме id) атрибуты + TYPE_SPECIFIC_DATA. В зависимости от `bodyType`, можно создать объекты разных типов используя одну и ту же форму запроса:
+```json
+{
+  "name": "Меркурий",
+  "description": "Наименьшая планета Солнечной системы, первая планета от Солнца",
+  "body_type": "PLANET",
+  "discovery_time": "2026-02-01T00:14:00",
+  "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/30/Mercury_in_color_-_Prockter07_centered.jpg",
+  "image_caption": "Изображение Меркурия, полученное во время первого пролёта космического аппарата «Мессенджер»",
+  "right_ascension": 281.01,
+  "declination": 61.41,
+  "type_specific_data": {
+    "star_id": 1,
+    "orbital_period_days": 87.9691,
+    "earth_mean": 0.3829,
+    "earth_volume": 0.056,
+    "mean_density": 5.427,
+    "surface_gravity": 3.7,
+    "surface_temperature_kelvin": 440.15
+  }
+}
+```
